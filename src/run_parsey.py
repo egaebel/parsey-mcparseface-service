@@ -14,3 +14,8 @@ def run_parsey(sentence):
             break
         start_index += 1
     return '\n'.join(parsey_output_list[start_index:])
+
+if __name__ == '__main__':
+    sentence = "What a nice sentence this is."
+    print("Testing run_parsey with sentence: %s" % sentence)
+    print("run_parsey output: %s " % run_parsey(sentence))
