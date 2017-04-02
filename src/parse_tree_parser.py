@@ -91,6 +91,7 @@ class ParseNode:
 
     def add_child(self, child):
         self.children.append(child)
+        return self
 
     def get_edges(self):
         return self._get_edges_helper([])
