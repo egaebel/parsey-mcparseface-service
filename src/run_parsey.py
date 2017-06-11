@@ -3,17 +3,26 @@ from subprocess import PIPE
 from subprocess import Popen
 from subprocess import STDOUT
 
-def run_parsey(sentence):
+def run_parsey(sentence, max_retries=10):
     parsey_path = "../../parsey-mcparseface-service/src/parsey.sh"
-    parsey_proc = Popen(["/bin/bash", parsey_path, sentence], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-    parsey_output, parsey_error = parsey_proc.communicate(input="\n")
-    # Trim logging, start output at line starting with "Input:""
-    parsey_output_list = parsey_output.split("\n")
-    start_index = 0
-    for line in parsey_output_list:
-        if line.find("Input:") == 0:
-            break
-        start_index += 1
+    retry_count = 0
+    while retry_count < max_retries:
+        parsey_proc = Popen(["/bin/bash", parsey_path, sentence], stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+        parsey_output, parsey_error = parsey_proc.communicate(input="\n")
+        # Trim logging, start output at line starting with "Input:""
+        parsey_output_list = parsey_output.split("\n")
+        start_index = 0
+        for line in parsey_output_list:
+            if line.find("Input:") == 0:
+                break
+            start_index += 1
+
+        # If the output is not empty then parsey ran successfully
+        # If the output is empty then parsey had an error and we retry
+        if not parsey_output_list[start_index:].isspace():
+            break    
+        retry_count += 1
+
     return '\n'.join(parsey_output_list[start_index:])
 
 def test_with_multiple_processes():
