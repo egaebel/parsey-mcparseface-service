@@ -3,7 +3,7 @@ from subprocess import PIPE
 from subprocess import Popen
 from subprocess import STDOUT
 
-def run_parsey(sentence, max_retries=5):
+def run_parsey(sentence, max_retries=10):
     parsey_path = "../../parsey-mcparseface-service/src/parsey.sh"
     retry_count = 0
     while retry_count < max_retries:
@@ -23,6 +23,9 @@ def run_parsey(sentence, max_retries=5):
             break    
         retry_count += 1
         print("Retry number %d for parsey on sentence %s" % (retry_count, sentence))
+
+    if retry_count >= max_retries:
+        print("Failed to run parsey mcparseface on sentence %s" % sentence)
 
     return '\n'.join(parsey_output_list[start_index:])
 
