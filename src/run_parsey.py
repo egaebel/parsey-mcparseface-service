@@ -19,7 +19,7 @@ def run_parsey(sentence, max_retries=5):
 
         # If the output is not empty then parsey ran successfully
         # If the output is empty then parsey had an error and we retry
-        if not ''.join(parsey_output_list[start_index:]).isspace():
+        if not ''.join(parsey_output_list[start_index:]).isspace() and not ''.join(parsey_output_list[start_index:]) == '':
             break    
         retry_count += 1
         print("Retry number %d for parsey on sentence %s" % (retry_count, sentence))
